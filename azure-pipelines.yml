@@ -30,11 +30,12 @@ stages:
     - script: echo "This is the Test stage"
       displayName: 'Print Test Message'
     - script: |
-        git diff --name-only $(System.PullRequest.TargetBranch) $(Build.SourceBranch) | grep -q "changelog.md"
-        if [ $? -eq 0 ]; then
-          echo "Changelog file was updated. Pipeline will continue."
+        git fetch origin +refs/heads/*:refs/remotes/origin/*
+        if git diff origin/$(System.PullRequest.TargetBranch) HEAD -- changelog.md | grep -q "^+"; then
+          echo "New lines were added to changelog.md. Pipeline will continue."
         else
-          echo "Changelog file was NOT updated. Failing the pipeline."
+          echo "No new lines added to changelog.md. Failing the pipeline."
           exit 1
         fi
-      displayName: 'Check for Changelog Update'
+    displayName: 'Check for Changelog Update'
+
