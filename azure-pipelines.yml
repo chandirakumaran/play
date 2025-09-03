@@ -4,11 +4,24 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-  - script: echo Hello, world!
-    displayName: 'Run a one-line script'
+stages:
+# Stage 1
+- stage: Build
+  displayName: 'Dummy Build Stage'
+  jobs:
+  - job: BuildJob
+    displayName: 'Build Job'
+    steps:
+    - script: echo "This is the Build stage"
+      displayName: 'Print Build Message'
 
-  - script: |
-      echo Add other tasks to build, test, and deploy your project.
-      echo See https://aka.ms/yaml
-    displayName: 'Run a multi-line script'
+# Stage 2
+- stage: Test
+  displayName: 'Dummy Test Stage'
+  dependsOn: Build   # Ensures this runs after Build stage
+  jobs:
+  - job: TestJob
+    displayName: 'Test Job'
+    steps:
+    - script: echo "This is the Test stage"
+      displayName: 'Print Test Message'
