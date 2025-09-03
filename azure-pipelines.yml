@@ -29,6 +29,9 @@ stages:
     steps:
     - script: echo "This is the Test stage"
       displayName: 'Print Test Message'
+  - job: changelog
+    displayName: 'log check'
+    steps:
     - script: |
         git fetch origin +refs/heads/*:refs/remotes/origin/*
         TARGET_BRANCH=$(System.PullRequest.TargetBranch)
