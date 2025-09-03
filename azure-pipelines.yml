@@ -1,5 +1,7 @@
-trigger:
-  - main
+pr:
+  branches:
+    include:
+      - main  # Trigger only when PR targets 'main'
 
 pool:
   vmImage: ubuntu-latest
