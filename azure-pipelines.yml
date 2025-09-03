@@ -31,11 +31,15 @@ stages:
       displayName: 'Print Test Message'
     - script: |
         git fetch origin +refs/heads/*:refs/remotes/origin/*
-        if git diff origin/$(System.PullRequest.TargetBranch) HEAD -- changelog.md | grep -q "^+"; then
+        TARGET_BRANCH=$(System.PullRequest.TargetBranch)
+        echo "Comparing against: $TARGET_BRANCH"
+        
+        if git diff origin/$TARGET_BRANCH HEAD -- changelog.md \
+          | grep '^+' | grep -v '^+++' > /dev/null; then
           echo "New lines were added to changelog.md. Pipeline will continue."
         else
           echo "No new lines added to changelog.md. Failing the pipeline."
           exit 1
         fi
-    displayName: 'Check for Changelog Update'
+      displayName: 'Check for Changelog Update'
 
