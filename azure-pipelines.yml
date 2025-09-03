@@ -32,6 +32,7 @@ stages:
     - script: |
         git fetch origin +refs/heads/*:refs/remotes/origin/*
         TARGET_BRANCH=$(System.PullRequest.TargetBranch)
+        TARGET_BRANCH=${TARGET_BRANCH#refs/heads/}
         echo "Comparing against: $TARGET_BRANCH"
         
         if git diff origin/$TARGET_BRANCH HEAD -- changelog.md \
