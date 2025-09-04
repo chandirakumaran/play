@@ -90,7 +90,7 @@ stages:
           fi
         
           echo "Uploading $ARTIFACT_FILE to ADLS..."
-          az storage fs file upload \
+          az storage blob upload \
               --account-name $STORAGE_ACCOUNT \
               --file-system $CONTAINER_NAME \
               --path $DEST_PATH \
