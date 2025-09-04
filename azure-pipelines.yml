@@ -91,10 +91,10 @@ stages:
         
           echo "Uploading $ARTIFACT_FILE to ADLS..."
           az storage fs file upload \
-            --account-name <storage-account> \
-            --file-system <container-name> \
-            --path <remote-path-in-container> \
-            --source <local-file-path> \
+            --account-name $STORAGE_ACCOUNT \
+            --file-system $CONTAINER_NAME \
+            --path $DEST_PATH \
+            --source $ARTIFACT_FILE \
             --auth-mode login \
             --overwrite
 
