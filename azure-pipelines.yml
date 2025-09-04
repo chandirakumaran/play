@@ -75,7 +75,7 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          STORAGE_ACCOUNT="ckchecks"       # Replace with your storage account
+          STORAGE_ACCOUNT="ckcheck"       # Replace with your storage account
           CONTAINER_NAME="artifacts"             # Replace with your ADLS container
           ARTIFACT_FILE="$(Build.SourcesDirectory)/repo_artifact.zip"
           DEST_PATH="pipeline-artifacts/repo_artifact.zip"
