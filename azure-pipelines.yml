@@ -91,10 +91,11 @@ stages:
         
           echo "Uploading $ARTIFACT_FILE to ADLS..."
           az storage fs file upload \
-            --account-name $STORAGE_ACCOUNT \
-            --file-system $CONTAINER_NAME \
-            --path $DEST_PATH \
-            --source $ARTIFACT_FILE \
+            --account-name mystorageaccount \
+            --account-endpoint https://mystorageaccount.dfs.core.windows.net \
+            --file-system mycontainer \
+            --path pipeline-artifacts/repo_artifact.zip \
+            --source /home/vsts/work/1/s/repo_artifact.zip \
             --auth-mode login \
             --overwrite
 
