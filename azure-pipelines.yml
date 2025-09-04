@@ -47,3 +47,45 @@ stages:
         fi
       displayName: 'Check for Changelog Update'
 
+# Stage 3: Package and Upload Repo to ADLS
+- stage: UploadRepo
+  displayName: 'Package and Upload Repo to ADLS'
+  dependsOn: Test
+  jobs:
+  - job: PackageAndUpload
+    displayName: 'Package Repo and Upload'
+    steps:
+    # Step 1: Zip the entire repository
+    - script: |
+        echo "Creating repo artifact..."
+        zip -r repo_artifact.zip $(Build.SourcesDirectory)
+      displayName: 'Zip the entire repository'
+
+    # Step 2: Optional - publish as DevOps artifact
+    # - task: PublishPipelineArtifact@1
+    #   inputs:
+    #     targetPath: '$(Build.SourcesDirectory)/repo_artifact.zip'
+    #     artifact: 'RepoArtifact'
+
+    # Step 3: Upload the artifact to ADLS
+    - task: AzureCLI@2
+      displayName: 'Upload Repo Artifact to ADLS'
+      inputs:
+        azureSubscription: 'adls'  # Replace with your Service Connection name
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          STORAGE_ACCOUNT="ckchecks"       # Replace with your storage account
+          CONTAINER_NAME="artifacts"             # Replace with your ADLS container
+          ARTIFACT_FILE="$(Build.SourcesDirectory)/repo_artifact.zip"
+          DEST_PATH="pipeline-artifacts/repo_artifact.zip"
+
+          echo "Uploading $ARTIFACT_FILE to ADLS..."
+          az storage fs file upload \
+            --account-name $STORAGE_ACCOUNT \
+            --file $ARTIFACT_FILE \
+            --path $DEST_PATH \
+            --file-system $CONTAINER_NAME
+
+          echo "Upload complete!"
+
