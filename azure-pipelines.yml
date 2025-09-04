@@ -95,5 +95,6 @@ stages:
               --file-system $CONTAINER_NAME \
               --path $DEST_PATH \
               --source $ARTIFACT_FILE \
+              --auth-mode login \
               --overwrite
 
