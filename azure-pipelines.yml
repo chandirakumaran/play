@@ -75,17 +75,25 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          STORAGE_ACCOUNT="ckcheck"       # Replace with your storage account
-          CONTAINER_NAME="artifacts"             # Replace with your ADLS container
+          STORAGE_ACCOUNT="mystorageaccount"
+          CONTAINER_NAME="mycontainer"
           ARTIFACT_FILE="$(Build.SourcesDirectory)/repo_artifact.zip"
           DEST_PATH="pipeline-artifacts/repo_artifact.zip"
-
+        
+          echo "Checking artifact file exists..."
+          if [ -f "$ARTIFACT_FILE" ]; then
+            echo "File found: $ARTIFACT_FILE"
+          else
+            echo "File NOT found! Pipeline workspace contents:"
+            ls -l $(Build.SourcesDirectory)
+            exit 1
+          fi
+        
           echo "Uploading $ARTIFACT_FILE to ADLS..."
           az storage fs file upload \
             --account-name $STORAGE_ACCOUNT \
             --file $ARTIFACT_FILE \
             --path $DEST_PATH \
-            --file-system $CONTAINER_NAME
-
-          echo "Upload complete!"
+            --file-system $CONTAINER_NAME \
+            --overwrite
 
